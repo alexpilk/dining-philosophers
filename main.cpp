@@ -3,6 +3,10 @@
 #include <thread>
 #include <chrono>
 #include <mutex>
+#include <ncurses.h>
+#include "Philosopher.h"
+#include "Waiter.h"
+
 
 using namespace std;
 
@@ -74,15 +78,33 @@ void exit_handler()
 
 int main(int argc, char** argv)
 {
-    int thinking_sleeping[PHILOSOPHERS][2] = { { 700, 700 }, { 350, 350 }, { 1000, 1000 }, { 1000, 1000 }, { 1000, 2000 } };
-    thread threads[PHILOSOPHERS];
-    for (int i = 0; i < PHILOSOPHERS; i++) {
-        threads[i] = thread(philosopher, i, thinking_sleeping[i][0], thinking_sleeping[i][1]);
-    }
-    exit_handler();
-    for (auto &thread : threads) {
-        thread.join();
-    }
-    cout << "Ended" << endl;
+    auto* waiter = new Waiter(3);
+    Philosopher* p = waiter->add_philosopher(2000, 2000);
+    Philosopher* p2 = waiter->add_philosopher(2000, 2000);
+    Philosopher* p3 = waiter->add_philosopher(2000, 2000);
+    initscr();			/* Start curses mode 		  */
+    thread t(&Philosopher::loop, p);
+    thread t2(&Philosopher::loop, p2);
+    thread t3(&Philosopher::loop, p3);
+//    mvprintw(0, 0, "Hello World 1 !!!");	/* Print Hello World		  */
+//    a->display("cool", 2);
+//    refresh();			/* Print it on to the real screen */
+//    getch();			/* Wait for user input */
+//    mvprintw(0, 0, "Hello World 2 !!!");	/* Print Hello World		  */
+//    refresh();			/* Print it on to the real screen */
+    getch();
+    endwin();			/* End curses mode		  */
+
+    return 0;
+//    int thinking_sleeping[PHILOSOPHERS][2] = { { 700, 700 }, { 350, 350 }, { 1000, 1000 }, { 1000, 1000 }, { 1000, 2000 } };
+//    thread threads[PHILOSOPHERS];
+//    for (int i = 0; i < PHILOSOPHERS; i++) {
+//        threads[i] = thread(philosopher, i, thinking_sleeping[i][0], thinking_sleeping[i][1]);
+//    }
+//    exit_handler();
+//    for (auto &thread : threads) {
+//        thread.join();
+//    }
+//    cout << "Ended" << endl;
     return 0;
 }
