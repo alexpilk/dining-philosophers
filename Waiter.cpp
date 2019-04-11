@@ -7,12 +7,6 @@
 #include <iostream>
 
 //bool EXIT_F;
-Waiter::Waiter(int philosophers) {
-    for (int i = 0; i < philosophers; i++) {
-        Fork* fork = new Fork();
-        this->forks.push_back(fork);
-    }
-}
 std::mutex my_mutex;
 std::mutex queue_mutex;
 std::mutex release_mutex;
@@ -27,7 +21,6 @@ bool Waiter::force_request_forks(Philosopher *philosopher) {
     std::cout << "Philosopher " << id << " granted request attempt" << std::endl;
     int L = id;
     int R = id == this->forks.size() - 1 ? 0 : L + 1;
-//    std::cout << L << " " << R << " " << this->forks.size() << std::endl;
     if(this->forks[L]->mutex.try_lock()) {
         std::cout << "Philosopher " << id << " got L " << L << std::endl;
         if(this->forks[R]->mutex.try_lock()) {
@@ -38,20 +31,13 @@ bool Waiter::force_request_forks(Philosopher *philosopher) {
             std::cout << "No R " << R << std::endl;
             this->forks[L]->mutex.unlock();
             my_mutex.unlock();
-//            return request_forks(philosopher);
-
-//            this->add_to_queue(philosopher);
             return false;
         }
     } else {
         std::cout << "No L " << L << std::endl;
-//        std::this_thread::sleep_for(std::chrono::milliseconds(4000));
         my_mutex.unlock();
-//        this->add_to_queue(philosopher);
-//        return request_forks(philosopher);
         return false;
-    };
-//    this->queue.push_back(philosopher);
+    }
 }
 
 
@@ -83,6 +69,8 @@ void Waiter::return_forks(Philosopher* philosopher) {
 Philosopher* Waiter::add_philosopher(int eating_time, int thinking_time) {
     auto* philosopher = new Philosopher(this, (int)this->philosophers.size(), eating_time, thinking_time);
     this->philosophers.push_back(philosopher);
+    Fork* fork = new Fork();
+    this->forks.push_back(fork);
     return philosopher;
 }
 
@@ -156,13 +144,3 @@ void Waiter::release_from_queue() {
     release_mutex.unlock();
     release_from_queue();
 }
-
-//void Waiter::wait(Philosopher *philosopher) {
-//    this->queue.push_back(philosopher);
-//    int id = philosopher->get_id();
-//    int L_id = id == 0 ? this->philosophers.size() - 1 : id - 1;
-//    int R_id = id == this->philosophers.size() - 1 ? 0 : id + 1;
-//    Philosopher* L = this->philosophers[L_id];
-//    Philosopher* R = this->philosophers[R_id];
-//    L->condition.wait(L->mutex)
-//}

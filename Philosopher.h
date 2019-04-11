@@ -23,8 +23,6 @@ private:
 
 public:
     bool retry = false;
-    std::mutex mutex;
-    std::condition_variable condition;
     Philosopher(Waiter* waiter, int id, int eating_time, int thinking_time);
     void think();
     void eat();

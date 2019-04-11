@@ -6,7 +6,6 @@
 #include <ncurses.h>
 #include <mutex>
 #include <iostream>
-//bool EXIT_F;
 
 
 Philosopher::Philosopher(Waiter* waiter, int id, int eating_time, int thinking_time) {

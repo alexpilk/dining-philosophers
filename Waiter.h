@@ -22,7 +22,6 @@ private:
 
 public:
     bool EXIT = false;
-    Waiter(int philosophers);
     Philosopher* add_philosopher(int eating_time, int thinking_time);
     void request_forks(Philosopher* philosopher);
     void return_forks(Philosopher* philosopher);
