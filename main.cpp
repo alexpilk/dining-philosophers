@@ -6,15 +6,16 @@
 #include <ncurses.h>
 #include "Philosopher.h"
 #include "Waiter.h"
-
+//#include "../../.CLion2019.1/system/.remote/10.42.77.48_22/135844fd-e843-4f56-850c-5ac626575793/usr/include/c++/6/mutex"
 
 using namespace std;
 
-bool EXIT_FLAG = false;
 const int PHILOSOPHERS = 5;
 bool FORKS[PHILOSOPHERS * 2] = { false };
+//bool EXIT_F = false;
 mutex cout_mutex;
 
+bool EXIT_FLAG;
 
 void print(const string str){
     cout_mutex.lock();
@@ -63,39 +64,66 @@ void philosopher(int i, int eating_time, int thinking_time)
     }
 }
 
-void exit_handler()
+void exit_handler(Waiter* waiter)
 {
     while (true) {
+        cout << "EXIT HANDLER" << endl;
         string key;
-        key = to_string(cin.get());
+        key = cin.get();
+        cout << key << " yup" << endl;
         if (key == "e") {
             cout << "Exit signal received " << key << endl;
-            EXIT_FLAG = true;
+            waiter->EXIT = true;
             break;
         }
     }
 }
 
+void test(){
+//    mutex m1;
+//    mutex m2;
+//    m1.try_lock();
+//    std::scoped_lock try_lock(m1, m2, std::try_to_lock);
+////    cout << m1.try_lock() << endl;
+////    cout << m2.try_lock() << endl;
+//    this_thread::sleep_for(std::chrono::milliseconds(1000));
+////    m1.unlock();
+////    m2.unlock();
+
+}
 int main(int argc, char** argv)
 {
-    auto* waiter = new Waiter(3);
+//    thread t(test);
+//    t.join();
+    auto* waiter = new Waiter(4);
     Philosopher* p = waiter->add_philosopher(2000, 2000);
     Philosopher* p2 = waiter->add_philosopher(2000, 2000);
     Philosopher* p3 = waiter->add_philosopher(2000, 2000);
-    initscr();			/* Start curses mode 		  */
+    Philosopher* p4 = waiter->add_philosopher(2000, 2000);
+//    initscr();			/* Start curses mode 		  */
+    thread w(&Waiter::release_from_queue, waiter);
     thread t(&Philosopher::loop, p);
     thread t2(&Philosopher::loop, p2);
     thread t3(&Philosopher::loop, p3);
+    thread t4(&Philosopher::loop, p4);
 //    mvprintw(0, 0, "Hello World 1 !!!");	/* Print Hello World		  */
 //    a->display("cool", 2);
 //    refresh();			/* Print it on to the real screen */
 //    getch();			/* Wait for user input */
 //    mvprintw(0, 0, "Hello World 2 !!!");	/* Print Hello World		  */
 //    refresh();			/* Print it on to the real screen */
-    getch();
-    endwin();			/* End curses mode		  */
+//    getch();
+    exit_handler(waiter);
+    w.join();
+    t.join();
+    t2.join();
+    t3.join();
+    t4.join();
+//    endwin();			/* End curses mode		  */
+//
+//    return 0;
 
-    return 0;
+
 //    int thinking_sleeping[PHILOSOPHERS][2] = { { 700, 700 }, { 350, 350 }, { 1000, 1000 }, { 1000, 1000 }, { 1000, 2000 } };
 //    thread threads[PHILOSOPHERS];
 //    for (int i = 0; i < PHILOSOPHERS; i++) {

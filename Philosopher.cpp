@@ -5,6 +5,8 @@
 #include <thread>
 #include <ncurses.h>
 #include <mutex>
+#include <iostream>
+//bool EXIT_F;
 
 
 Philosopher::Philosopher(Waiter* waiter, int id, int eating_time, int thinking_time) {
@@ -29,15 +31,15 @@ void Philosopher::think() {
 }
 
 void Philosopher::display(std::string status, int progress) {
-//    std::string message = status + "\t" + std::to_string(progress);
-//    mvprintw(this->id, 0, message.c_str());	/* Print Hello World		  */
-//    refresh();			/* Print it on to the real screen */
+    std::string message = status + "\t" + std::to_string(progress);
+    mvprintw(this->id, 0, message.c_str());	/* Print Hello World		  */
+    refresh();			/* Print it on to the real screen */
 }
 
 void Philosopher::loop() {
-    while (true) {
-        this->think();
+    while (!this->waiter->EXIT) {
         this->eat();
+        this->think();
     }
 }
 
