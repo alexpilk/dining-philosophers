@@ -20,7 +20,7 @@ private:
     int thinking_time;
     Status status;
     Waiter* waiter;
-
+    void sleep(std::string status, int time);
 public:
     bool retry = false;
     Philosopher(Waiter* waiter, int id, int eating_time, int thinking_time);
