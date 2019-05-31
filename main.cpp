@@ -21,10 +21,10 @@ void wait_for_exit() {
     }
 }
 
-int NUMBER_OF_EMPLOYEES = 10;
+int NUMBER_OF_EMPLOYEES = 20;
 
 int main(int argc, char **argv) {
-    auto *display = new Display(false);
+    auto *display = new Display(true);
 
     auto *kitchen = new Kitchen(display);
     kitchen->generate_cups_and_spoons(2);

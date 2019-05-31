@@ -15,9 +15,10 @@ private:
     Office *office;
     std::string index;
     std::thread life_thread;
-    int concentration_time = 1000;
-    void concentrate();
-    void attempt_activity(bool (Office::*activity)(), std::string verbose_name);
+    int crying_time = 200;  // 2 to 7 seconds
+    int meeting_time = 5000 + rand() % 10000;  // 2 to 7 seconds
+    int coffee_time = 5000 + rand() % 5000;  // 2 to 4 seconds
+    int work_time = 5000 + rand() % 15000;  // 2 to 12 seconds
 public:
     void assign_to_office(Office *office);
     void born(int index);

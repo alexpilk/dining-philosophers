@@ -17,7 +17,6 @@ private:
     std::vector<Desk *> desks;
     std::vector<MeetingRoom *> meeting_rooms;
     Kitchen *kitchen;
-    void wait(int duration);
 public:
     void generate_desks(int number_of_desks);
 
@@ -30,6 +29,8 @@ public:
     bool request_coffee(int duration, std::string);
 
     bool request_meeting(int duration, std::string);
+
+    void wait(int duration, std::string index, std::string status);
 };
 
 

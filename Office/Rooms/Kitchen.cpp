@@ -11,6 +11,7 @@ void Kitchen::generate_cups_and_spoons(int number_of_cups) {
         this->cups.push_back(new Cup());
         this->spoons.push_back(new Spoon());
     }
+    this->display->set_total_cups_and_spoons(number_of_cups);
 }
 
 CupSpoonPair Kitchen::take_cup_and_spoon() {

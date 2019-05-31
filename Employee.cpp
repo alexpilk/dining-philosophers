@@ -18,9 +18,12 @@ void Employee::born(int index) {
 
 void Employee::live() {
     while(Employee::living) {
-        this->office->request_desk(this->concentration_time, this->index);
-        this->office->request_coffee(this->concentration_time, this->index);
-        this->office->request_meeting(this->concentration_time, this->index);
+        bool desk = this->office->request_desk(this->work_time, this->index);
+        bool coffee = this->office->request_coffee(this->coffee_time, this->index);
+        bool meeting = this->office->request_meeting(this->meeting_time, this->index);
+        if (!desk && !coffee && !meeting) {
+            this->display->update_employee(std::atoi(this->index.c_str()), "¯\\_(*-*)_/¯   ", -1);
+        }
     }
 }
 
