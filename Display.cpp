@@ -6,7 +6,6 @@
 #include <ncurses.h>
 #include <string>
 #include <iostream>
-#include "./Office/Office.h"
 
 Display::Display(bool ncurses_mode) {
     this->ncurses_mode = ncurses_mode;
@@ -27,5 +26,11 @@ void Display::print(const std::string str){
         this->cout_mutex.lock();
         std::cout << str << std::endl;
         this->cout_mutex.unlock();
+    }
+}
+
+void Display::stop() {
+    if (this->ncurses_mode) {
+        endwin();
     }
 }

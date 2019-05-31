@@ -15,6 +15,7 @@ private:
 public:
     explicit Display(bool ncurses_mode);
     void start();
+    void stop();
     void print(std::string str);
 };
 

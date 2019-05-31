@@ -9,9 +9,9 @@
 #include "Employee.h"
 #include "./Office/Office.h"
 #include "./Office/Rooms/Kitchen.h"
+#include "EmployeeManager.h"
 
-void wait_for_exit()
-{
+void wait_for_exit() {
     while (true) {
         std::string key;
         key = std::cin.get();
@@ -21,50 +21,33 @@ void wait_for_exit()
     }
 }
 
+int NUMBER_OF_EMPLOYEES = 10;
 
-int main(int argc, char** argv)
-{
-    auto* kitchen = new Kitchen();
-    kitchen->generate_cups(10);
-    kitchen->generate_spoons(10);
+int main(int argc, char **argv) {
+    auto *display = new Display(false);
 
-    auto* office = new Office();
-    std::vector meeting_room_sizes = {3, 5, 8};
+    auto *kitchen = new Kitchen(display);
+    kitchen->generate_cups_and_spoons(2);
+
+    auto *office = new Office(display);
+    std::vector<int> meeting_room_sizes = {2, 3};
     office->generate_meeting_rooms(meeting_room_sizes);
+    office->generate_desks(3);
     office->add_kitchen(kitchen);
 
-    for (int i =0; i < NUMBER_OF_EMPLOYEES; i++) {
-        auto* employee = new Employee();
-        office->add_employee(employee);
-//        threads[i] = std::thread(&Philosopher::loop, p);
+    auto *employee_manager = new EmployeeManager(display);
+    employee_manager->assign_to_office(office);
+
+    for (int i = 0; i < NUMBER_OF_EMPLOYEES; i++) {
+        employee_manager->create_employee();
     }
-    auto* display = new Display(false);
 
     display->start();
-    display->print("dupa");
 
-//    auto* waiter = new Waiter();
-//
-//    const int PHILOSOPHERS = 5;
-////    int thinking_sleeping[PHILOSOPHERS][2] = {{200, 250}, {300, 300}, {400, 350}, {500, 100}, {600, 200}};
-////    int thinking_sleeping[PHILOSOPHERS][2] = {{2000, 2000}, {2000, 2000}, {2000, 2000}, {2000, 2000}, {2000, 2000}};
-//    int thinking_sleeping[PHILOSOPHERS][2] = {{8000, 8000}, {5000, 6000}, {2000, 3000}, {2000, 2000}, {7000, 6000}};
-//    std::thread threads[PHILOSOPHERS];
-//    for (int i =0; i < PHILOSOPHERS; i++) {
-//        Philosopher* p = waiter->add_philosopher(thinking_sleeping[i][0], thinking_sleeping[i][1]);
-//        threads[i] = std::thread(&Philosopher::loop, p);
-//    }
-//
-//    initscr();			/* Start curses mode 		  */
-//    std::thread w(&Waiter::release_from_queue, waiter);
     wait_for_exit();
-    office->kill_employees();
+
+    employee_manager->kill_employees();
     display->stop();
-//    w.join();
-//    for (auto &thread : threads) {
-//        thread.join();
-//    }
-//    endwin();			/* End curses mode		  */
-//
-//    return 0;
+
+    return 0;
 }
